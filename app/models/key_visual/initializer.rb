@@ -3,12 +3,13 @@ module KeyVisual
     Cms::Node.plugin "key_visual/image"
     Cms::Part.plugin "key_visual/slide"
 
-    Cms::Role.permission :read_other_key_visual_images, module_name: "key_visual"
-    Cms::Role.permission :read_private_key_visual_images, module_name: "key_visual"
-    Cms::Role.permission :edit_other_key_visual_images, module_name: "key_visual"
-    Cms::Role.permission :edit_private_key_visual_images, module_name: "key_visual"
-    Cms::Role.permission :delete_other_key_visual_images, module_name: "key_visual"
-    Cms::Role.permission :delete_private_key_visual_images, module_name: "key_visual"
+    Cms::Role.permissions 'key_visual' => {
+                            images: {
+                              read: [:other, :private],
+                              edit: [:other, :private],
+                              delete: [:other, :private],
+                            }
+                          }
 
     SS::File.model "key_visual/image", SS::File
   end

@@ -15,66 +15,35 @@ module Cms
     Cms::Part.plugin "cms/calendar_nav"
     Cms::Part.plugin "cms/monthly_nav"
 
-    Cms::Role.permission :edit_cms_sites
-    Cms::Role.permission :edit_cms_groups
-    Cms::Role.permission :edit_cms_users
-    Cms::Role.permission :edit_cms_roles
-    Cms::Role.permission :edit_cms_members
-    Cms::Role.permission :edit_cms_editor_templates
-    #Cms::Role.permission :edit_cms_body_layouts
-    Cms::Role.permission :use_cms_tools
-    Cms::Role.permission :use_cms_editor_extensions
-    Cms::Role.permission :read_other_cms_nodes
-    Cms::Role.permission :read_other_cms_pages
-    Cms::Role.permission :read_other_cms_parts
-    Cms::Role.permission :read_other_cms_layouts
-    Cms::Role.permission :read_other_cms_files
-    Cms::Role.permission :read_other_cms_notices
-    Cms::Role.permission :read_other_cms_page_searches
-    Cms::Role.permission :read_private_cms_nodes
-    Cms::Role.permission :read_private_cms_pages
-    Cms::Role.permission :read_private_cms_parts
-    Cms::Role.permission :read_private_cms_layouts
-    Cms::Role.permission :read_private_cms_files
-    Cms::Role.permission :read_private_cms_notices
-    Cms::Role.permission :read_private_cms_page_searches
-    Cms::Role.permission :edit_other_cms_nodes
-    Cms::Role.permission :edit_other_cms_pages
-    Cms::Role.permission :edit_other_cms_parts
-    Cms::Role.permission :edit_other_cms_layouts
-    Cms::Role.permission :edit_other_cms_files
-    Cms::Role.permission :edit_other_cms_notices
-    Cms::Role.permission :edit_other_cms_page_searches
-    Cms::Role.permission :edit_private_cms_nodes
-    Cms::Role.permission :edit_private_cms_pages
-    Cms::Role.permission :edit_private_cms_parts
-    Cms::Role.permission :edit_private_cms_layouts
-    Cms::Role.permission :edit_private_cms_files
-    Cms::Role.permission :edit_private_cms_notices
-    Cms::Role.permission :edit_private_cms_page_searches
-    Cms::Role.permission :delete_other_cms_nodes
-    Cms::Role.permission :delete_other_cms_pages
-    Cms::Role.permission :delete_other_cms_parts
-    Cms::Role.permission :delete_other_cms_layouts
-    Cms::Role.permission :delete_other_cms_files
-    Cms::Role.permission :delete_other_cms_notices
-    Cms::Role.permission :delete_other_cms_page_searches
-    Cms::Role.permission :delete_private_cms_nodes
-    Cms::Role.permission :delete_private_cms_pages
-    Cms::Role.permission :delete_private_cms_parts
-    Cms::Role.permission :delete_private_cms_layouts
-    Cms::Role.permission :delete_private_cms_files
-    Cms::Role.permission :delete_private_cms_notices
-    Cms::Role.permission :delete_private_cms_page_searches
-    Cms::Role.permission :release_other_cms_pages
-    Cms::Role.permission :release_private_cms_pages
-    Cms::Role.permission :approve_other_cms_pages
-    Cms::Role.permission :approve_private_cms_pages
-    Cms::Role.permission :move_private_cms_nodes
-    Cms::Role.permission :move_private_cms_pages
-    Cms::Role.permission :move_other_cms_nodes
-    Cms::Role.permission :move_other_cms_pages
-    Cms::Role.permission :unlock_other_cms_pages
+    Cms::Role.permissions cms: {
+                            sites: :edit,
+                            groups: :edit,
+                            roles: :edit,
+                            members: :edit,
+                            editor_templates: :edit,
+                            # body_layouts: :edit,
+                            tools: :use,
+                            editor_extensions: :use,
+                          }
+
+    basic_roles = [:nodes, :pages, :parts, :layouts, :files, :notices, :page_searches].reduce({}) do |res,v|
+      res[v] = {
+        read: [:other, :private],
+        edit: [:other, :private],
+        delete: [:other, :private],
+      }
+      res
+    end
+    Cms::Role.permissions cms: basic_roles
+
+    Cms::Role.permissions cms: {
+                            pages: {
+                              release: [:other, :private],
+                              approve: [:other, :private],
+                              move: [:other, :private],
+                              unlock: :other },
+                            nodes: {
+                              move: [:other, :private], }, }
 
     SS::File.model "cms/editor_template", SS::File
     SS::File.model "cms/file", Cms::File

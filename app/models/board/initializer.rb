@@ -3,13 +3,10 @@ module Board
     Cms::Node.plugin "board/post"
     Cms::Node.plugin "board/anpi_post"
 
-    Cms::Role.permission :read_board_posts
-    Cms::Role.permission :edit_board_posts
-    Cms::Role.permission :delete_board_posts
-
-    Cms::Role.permission :read_board_anpi_posts
-    Cms::Role.permission :edit_board_anpi_posts
-    Cms::Role.permission :delete_board_anpi_posts
+    Cms::Role.permissions board: {
+                            posts: [:read, :edit, :delete],
+                            anpi_posts: [:read, :edit, :delete],
+                          }
 
     SS::File.model "board/post", Board::File
   end

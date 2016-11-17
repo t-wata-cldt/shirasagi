@@ -32,25 +32,21 @@ module Member
     Cms::Part.plugin "member/photo_slide"
     Cms::Part.plugin "member/invited_group"
 
-    Cms::Role.permission :read_other_member_blogs
-    Cms::Role.permission :read_private_member_blogs
-    Cms::Role.permission :edit_other_member_blogs
-    Cms::Role.permission :edit_private_member_blogs
-    Cms::Role.permission :delete_other_member_blogs
-    Cms::Role.permission :delete_private_member_blogs
-    Cms::Role.permission :release_other_member_blogs
-    Cms::Role.permission :release_private_member_blogs
-    Cms::Role.permission :approve_other_member_blogs
-    Cms::Role.permission :approve_private_member_blogs
-
-    Cms::Role.permission :read_other_member_photos
-    Cms::Role.permission :read_private_member_photos
-    Cms::Role.permission :edit_other_member_photos
-    Cms::Role.permission :edit_private_member_photos
-    Cms::Role.permission :delete_other_member_photos
-    Cms::Role.permission :delete_private_member_photos
-    Cms::Role.permission :release_other_member_photos
-    Cms::Role.permission :release_private_member_photos
+    Cms::Role.permission member: {
+                           blogs: {
+                             read: [:other, :private],
+                             edit: [:other, :private],
+                             delete: [:other, :private],
+                             release: [:other, :private],
+                             approve: [:other, :private],
+                           },
+                           photos: {
+                             read: [:other, :private],
+                             edit: [:other, :private],
+                             delete: [:other, :private],
+                             release: [:other, :private],
+                           },
+                         }
 
     SS::File.model "member/photo", Member::PhotoFile
   end

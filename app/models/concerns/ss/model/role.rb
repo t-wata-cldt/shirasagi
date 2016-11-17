@@ -39,6 +39,54 @@ module SS::Model::Role
       self._module_permission_names[module_name] << name
     end
 
+    # 権限名は:
+    # ${アクション}_(${権限範囲})?_${モジュール名}_${リソース}
+    # なので、以下のように構造化して一気に登録:
+    # {
+    #  ${モジュール}: {
+    #   ${リソース}: {
+    #    ${アクション}: [${権限範囲}]
+    #   }
+    #  }
+    # }
+    # または、権限範囲なしの場合
+    # {
+    #  ${モジュール}: {
+    #   ${リソース}: [${アクション}*]
+    #  }
+    # }
+    def permissions mods
+      mods.each do |mod,resources|
+        mod = mod.to_sym
+
+        # モジュール単位の権限名のリスト
+        mod_res = (self._module_permission_names[mod] ||= [])
+
+        # gwsでの'/'を'_'に置き換え
+        mod_key = mod.to_s.gsub /[\/]/, '_'
+
+        resources.each do |res,acts|
+          if acts.kind_of? Hash # 4層
+            acts.each do |act,perms|
+              [perms].flatten.each do |perm|
+                raise "invalid permission: #{perm}" if
+                  [:private, :other, :users, :member].find{|v| v == perm}.nil?
+                name = "#{act}_#{perm}_#{mod_key}_#{res}".freeze
+                self._permission_names << name
+                mod_res << name.to_sym
+              end
+            end
+          else # 3層
+            [acts].flatten.each do |act|
+              name = "#{act}_#{mod_key}_#{res}".freeze
+              self._permission_names << name
+              mod_res << name.to_sym
+            end
+          end
+        end
+      end
+    end
+
     def permission_names
       _permission_names.sort
     end
