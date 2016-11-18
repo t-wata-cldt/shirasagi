@@ -230,6 +230,8 @@ GEM
     multi_json (1.12.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
+    natto (1.1.1)
+      ffi (>= 1.9.0)
     nenv (0.3.0)
     net-http-persistent (1.9)
     net-ldap (0.14.0)
@@ -533,6 +535,7 @@ DEPENDENCIES
   mongoid (~> 5.1.0)
   mongoid-grid_fs
   mongoid-rspec
+  natto
   net-ldap
   non-stupid-digest-assets
   oj
@@ -579,4 +582,4 @@ DEPENDENCIES
   zipruby
 
 BUNDLED WITH
-   1.12.5
+   1.13.6

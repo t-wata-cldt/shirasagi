@@ -30,7 +30,7 @@ class Voice::MecabParser
       mecab_param = MECAB_OPTIONS.dup
       mecab_param << %( -u "#{userdic}") if userdic.present?
 
-      require "MeCab"
-      MeCab::Tagger.new(mecab_param)
+      require "natto"
+      Natto::MeCab.new mecab_param
     end
 end

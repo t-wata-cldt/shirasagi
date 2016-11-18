@@ -2,11 +2,8 @@ module Kana::Convertor
   @@mecab = nil
 
   if SS.config.kana.disable == false
-    require "MeCab"
-    @@mecab = MeCab::Tagger
-
-    #require "natto"
-    #@@mecab = Natto::MeCab
+    require "natto"
+    @@mecab = Natto::MeCab
   end
 
   class << self
