@@ -134,5 +134,18 @@ class Frypan
     end
 end
 
-Frypan.new.send ARGV[0]
-puts ""
+if ARGV[0] && Frypan.new.respond_to?(ARGV[0].to_sym)
+  Frypan.new.send ARGV[0].to_sym
+  puts ""
+else
+  puts "Usage:"
+  puts "  egg install ${module_name} [-v ${version}]"
+  puts "  egg uninstall ${module_name}"
+  puts "  egg pack ${module_name} [-v ${version}]"
+  puts ""
+  puts "Packed module file name format:"
+  puts "  ${RAILS_ROOT}/vendor/eggs/${module_name}[${version}].zip"
+  if ARGV[0]
+    STDERR.puts "Invalid command: \"#{ARGV[0]}\""
+  end
+end
